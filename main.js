@@ -1,14 +1,9 @@
-input = document.getElementById("in")
-
-
 const go = document.getElementById("go");
 
 let getRecords = () => {
-	input = document.getElementById("in").value
-	records = input.split("\n\n") // Blank line = two successive newlines.
-	// console.log(records);
-	// console.log(records[0].split("\n")[1].slice(1,-1));
-	return records.map((record) => {
+	input = document.getElementById("in").value.trim() 	// Remove extra blank space from input.
+	records = input.split("\n\n")						// Blank line = two successive newlines
+	return records.map((record) => { 					// Create record objects
 		lines = record.split("\n");
 		return {
 			id: lines[1].slice(1,-1),
@@ -19,6 +14,7 @@ let getRecords = () => {
 
 let postRecords = (records) => {
 	const out = document.getElementById("out")
+	const warnings = []
 	records.forEach((record) => {
 		const row = out.insertRow();
 
@@ -29,11 +25,19 @@ let postRecords = (records) => {
 		const idCell = row.insertCell();
 		const idText = document.createTextNode(record.id);
 		idCell.appendChild(idText);
+
+		if (!record.id.startsWith("900")) {
+			row.style["background-color"] = "gold";
+			warnings.push(record);
+		}
 	})
+	return warnings;
 }
 
 go.addEventListener("click", (e) => {
+	const start = Date.now()
 	records = getRecords();
-	console.log(records);
-	postRecords(records);
+	const warnings = postRecords(records);
+	const end = Date.now()
+	document.getElementById("msg").innerText = `Processed ${records.length} records in ${(end-start)/1000} seconds.${ warnings.length ? ` ${warnings.length} Warnings.` : ""}`
 });
