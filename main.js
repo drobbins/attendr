@@ -7,7 +7,8 @@ let getRecords = () => {
 		lines = record.split("\n");
 		return {
 			id: lines[1].slice(1,-1),
-			timestamp: new Date(lines[0].slice(0,-1))
+			datetime: new Date(lines[0].slice(0,-1)),
+			timestamp: lines[0].slice(0,-1)
 		}
 	});
 }
@@ -18,13 +19,17 @@ let postRecords = (records) => {
 	records.forEach((record) => {
 		const row = out.insertRow();
 
-		const timeCell = row.insertCell();
-		const timeText = document.createTextNode(record.timestamp.toLocaleDateString());
-		timeCell.appendChild(timeText);
-
 		const idCell = row.insertCell();
 		const idText = document.createTextNode(record.id);
 		idCell.appendChild(idText);
+
+		const dateCell = row.insertCell();
+		const dateText = document.createTextNode(record.datetime.toLocaleDateString());
+		dateCell.appendChild(dateText);
+
+		const timestampCell = row.insertCell();
+		const timestampText = document.createTextNode(record.timestamp.slice(11));
+		timestampCell.appendChild(timestampText);
 
 		if (!record.id.startsWith("900")) {
 			row.style["background-color"] = "gold";
