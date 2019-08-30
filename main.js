@@ -50,6 +50,18 @@ let placeDownloadLink = (records) => {
 	downloadLink.href = downloadableCSV
 }
 
+document.getElementById("clear").addEventListener("click", e => {
+	document.getElementById("in").value = ""
+	const out = document.getElementById("out")
+	while (out.firstChild) { out.removeChild(out.firstChild) }
+
+	downloadLink = document.getElementById("csv")
+	downloadLink.innerText = ""
+	downloadLink.href = ""
+
+	document.getElementById("msg").innerText = ""
+})
+
 go.addEventListener("click", (e) => {
 	const start = Date.now()
 	records = getRecords();
