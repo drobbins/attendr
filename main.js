@@ -39,10 +39,22 @@ let postRecords = (records) => {
 	return warnings;
 }
 
+let placeDownloadLink = (records) => {
+	// csvRecords = records.map( r => Object.values(r).join(",") )
+	csvRecords = records.map( r => [r.id, r.datetime.toLocaleDateString(), r.timestamp.slice(11)].join(",") )
+	console.log(csvRecords)
+	downloadableCSV = `data:text/plain;charset=utf-8, ${encodeURIComponent(csvRecords.join("\n"))}`
+
+	downloadLink = document.getElementById("csv")
+	downloadLink.innerText = "Download as CSV"
+	downloadLink.href = downloadableCSV
+}
+
 go.addEventListener("click", (e) => {
 	const start = Date.now()
 	records = getRecords();
 	const warnings = postRecords(records);
+	placeDownloadLink(records);
 	const end = Date.now()
 	document.getElementById("msg").innerText = `Processed ${records.length} records in ${(end-start)/1000} seconds.${ warnings.length ? ` ${warnings.length} Warnings.` : ""}`
 });
